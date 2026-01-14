@@ -9,4 +9,13 @@
 
 ### Part 2 Flashcards Study Guide:
 
+- [Flashcards 1-25](./Part-2/Part-1.md)
+- [Flashcards 26-50](./Part-2/Part-2.md)
+- [Flashcards 51-75](./Part-2/Part-3.md)
+- [Flashcards 76-100](./Part-2/Part-4.md)
 
+### Part 3: Customized Notes:
+
+- []()
+- []()
+- []()
