@@ -16,6 +16,27 @@
 
 ### Part 3: Customized Notes:
 
+- [Custom Flashcards Part 1](./Part-3-Custom-Notes/1-Customized-Notes.md)
+- [Custom Flashcards Part 1](./Part-3-Custom-Notes/2-Customized-Notes.md)
+
+
+### Part 4: Networking and Content Delivery (CloudOps)
+
 - []()
+
+### Part 5: Security and Compliance (CloudOps)
+
 - []()
+
+### Part 6: Deployment, Provisioning, and Automation (CloudOps)
+
 - []()
+
+### Part 7: Reliability and Business Continuity (CloudOps)
+
+- []()
+
+
+
+### Part 8: Monitoring, Logging, Analysis, Remediation, and Performance Optimization (CloudOps)
+ - []()

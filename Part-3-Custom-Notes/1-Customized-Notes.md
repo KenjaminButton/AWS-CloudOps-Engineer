@@ -629,137 +629,147 @@ Just need to provision infrastructure?
 
 ```
 ════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
+                     📌 AWS GLOBAL ACCELERATOR
 ════════════════════════════════════════════════════════════════
 ```
 
-Something new here
+## AWS Global Accelerator
 
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+**Definition:** A networking service that provides static IP addresses that act as a fixed entry point to your applications and eliminate the complexity of managing specific IP addresses for different AWS Regions and Availability Zones.
 
-Something new here
-
+### The Analogy: Toll-Free 1-800 Number
 ```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+Without Global Accelerator:
+  Customer in Tokyo → Dials local number → Routed over public internet → Your app in Virginia
+  (Slow, unpredictable routing)
 
-Something new here
-
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
+With Global Accelerator:
+  Customer in Tokyo → Dials 1-800 number → Nearest AWS edge → AWS private backbone → Your app
+  (Fast, consistent, optimized routing)
 ```
 
-Something new here
-
+### The Problem It Solves:
 ```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+Without Global Accelerator:
+  ┌────────────┐                                    ┌────────────┐
+  │   User     │ ───── Public Internet ─────────►  │   Your     │
+  │  (Tokyo)   │       (many hops, variable)       │   App      │
+  └────────────┘                                    └────────────┘
+                        😩 Slow, inconsistent
 
-Something new here
-
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
-
-Something new here
-
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
+With Global Accelerator:
+  ┌────────────┐     ┌─────────────┐     ┌─────────────────┐     ┌────────────┐
+  │   User     │ ──► │  Nearest    │ ──► │  AWS Private    │ ──► │   Your     │
+  │  (Tokyo)   │     │  Edge (TYO) │     │  Backbone       │     │   App      │
+  └────────────┘     └─────────────┘     └─────────────────┘     └────────────┘
+                                ✅ Fast, consistent
 ```
 
-Something new here
+### Key Features:
 
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+| Feature | What It Means |
+|---------|---------------|
+| **Static IP addresses** | 2 static IPs that never change (anycast) |
+| **Global edge network** | Traffic enters AWS at nearest edge location |
+| **AWS backbone** | Traffic travels on AWS private network, not public internet |
+| **Health checks** | Automatic failover to healthy endpoints |
 
-Something new here
-
+### How It Works:
 ```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
-
-Something new here
-
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
+1. You get 2 static anycast IPs (e.g., 75.2.60.5, 99.83.190.102)
+2. User connects to one of these IPs
+3. Traffic enters AWS at nearest edge location
+4. AWS routes over private backbone to your app
+5. If endpoint fails, traffic automatically reroutes
 ```
 
-Something new here
+### Static IPs — Why They Matter:
 
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+| Without Global Accelerator | With Global Accelerator |
+|---------------------------|------------------------|
+| IP changes if you redeploy | Same 2 IPs forever |
+| Must update DNS, firewall rules | No changes needed |
+| DNS propagation delays | Instant failover |
+| Whitelist multiple IPs | Whitelist just 2 IPs |
 
-Something new here
+### Global Accelerator vs CloudFront:
 
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+| Feature | Global Accelerator | CloudFront |
+|---------|-------------------|------------|
+| **Type** | Network layer (Layer 4) | Content delivery (Layer 7) |
+| **Best for** | TCP/UDP apps, gaming, VoIP | HTTP/HTTPS, static content |
+| **Static IPs** | ✅ Yes | ❌ No |
+| **Caching** | ❌ No | ✅ Yes |
+| **Use case** | Non-HTTP apps, IP whitelisting | Websites, APIs, video streaming |
 
-Something new here
-
+### Memory Trick:
 ```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+Global Accelerator = "Fast lane onto the AWS highway"
+  - Enters at nearest on-ramp (edge)
+  - Travels on private highway (backbone)
+  - Exits at your app
 
-Something new here
-
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
-
-Something new here
-
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
+CloudFront = "Local warehouse with copies of your stuff"
+  - Caches content at edge
+  - Serves content directly from edge
 ```
 
-Something new here
+### When to Use Which:
 
+| Scenario | Use |
+|----------|-----|
+| "Speed up website with caching" | CloudFront |
+| "Static IPs for whitelisting" | Global Accelerator |
+| "Gaming, VoIP, TCP/UDP apps" | Global Accelerator |
+| "Video streaming, images" | CloudFront |
+| "Instant failover between regions" | Global Accelerator |
+| "HTTP API acceleration" | Either (GA for static IPs, CF for caching) |
+
+### Endpoint Types:
+
+Global Accelerator can route to:
+
+| Endpoint | Description |
+|----------|-------------|
+| **ALB** | Application Load Balancer |
+| **NLB** | Network Load Balancer |
+| **EC2** | EC2 instances directly |
+| **Elastic IP** | Static IPs on instances |
+
+### Multi-Region Failover:
 ```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
+                    Global Accelerator
+                    (2 static IPs)
+                          │
+            ┌─────────────┴─────────────┐
+            ▼                           ▼
+     ┌─────────────┐             ┌─────────────┐
+     │  us-east-1  │             │  eu-west-1  │
+     │    (ALB)    │             │    (ALB)    │
+     │   Healthy   │             │   Healthy   │
+     └─────────────┘             └─────────────┘
+     
+     If us-east-1 fails → Traffic automatically goes to eu-west-1
+     No DNS changes, no IP changes, instant failover ✅
 ```
 
-Something new here
+### Exam Triggers:
 
-```
-════════════════════════════════════════════════════════════════
-                     📌 NEW SECTION
-════════════════════════════════════════════════════════════════
-```
+- "Static IP addresses for application" → Global Accelerator
+- "Improve global application performance" → Global Accelerator
+- "IP whitelisting for global app" → Global Accelerator
+- "Instant failover across regions" → Global Accelerator
+- "TCP/UDP acceleration" → Global Accelerator
+- "Gaming, VoIP, real-time apps" → Global Accelerator
+- "Caching content at edge" → CloudFront (not Global Accelerator)
 
-Something new here
+### Quick Comparison Table:
+
+| Need | Answer |
+|------|--------|
+| Static IPs | Global Accelerator |
+| Caching | CloudFront |
+| TCP/UDP apps | Global Accelerator |
+| HTTP/HTTPS content | CloudFront |
+| Both static IPs AND HTTP | Global Accelerator → ALB |
 
